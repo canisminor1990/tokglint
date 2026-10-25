@@ -1,0 +1,14 @@
+allowBuilds:
+  unrs-resolver: true
+
+publicHoistPattern:
+  - '*eslint*'
+  - '*prettier*'
+  - '*remark*'
+  - '*stylelint*'
+  - '*commitlint*'
+
+minimumReleaseAgeExclude:
+  - '@lobehub/fluent-emoji@5.0.1'
+  - '@lobehub/icons@6.9.1 || 6.11.0'
+  - '@lobehub/icons-static-avatar@2.5.0'

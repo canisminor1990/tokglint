@@ -1,0 +1,77 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    name: Build and publish Tokglint
+    runs-on: windows-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Require the tag to match the app version
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"
+          if ($tag -notmatch '^v\d+\.\d+\.\d+$') {
+            throw "Release tags must look like v1.2.3."
+          }
+          $version = $tag.Substring(1)
+          $package = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          $tauri = (Get-Content src-tauri/tauri.conf.json -Raw | ConvertFrom-Json).version
+          $cargo = (Select-String -Path src-tauri/Cargo.toml -Pattern '^version = "([^"]+)"' | Select-Object -First 1).Matches.Groups[1].Value
+          if ($package -ne $version -or $tauri -ne $version -or $cargo -ne $version) {
+            throw "Tag $tag does not match package.json ($package), tauri.conf.json ($tauri), and Cargo.toml ($cargo)."
+          }
+
+      - name: Point portable updates at this repository
+        shell: pwsh
+        run: |
+          $path = Join-Path (Get-Location) "src-tauri/Cargo.toml"
+          $url = "https://github.com/${{ github.repository }}"
+          $text = [System.IO.File]::ReadAllText($path)
+          $line = "repository = `"$url`""
+          if ($text -match '(?m)^repository\s*=') {
+            $text = [regex]::Replace($text, '(?m)^repository\s*=\s*".*"', $line)
+          } else {
+            $text = [regex]::Replace($text, '(?m)^(edition\s*=\s*"2021"\r?\n)', { param($match) $match.Groups[1].Value + $line + "`n" }, 1)
+          }
+          [System.IO.File]::WriteAllText($path, $text)
+
+      - name: Build the app and installers
+        run: pnpm build:app
+
+      - name: Publish the GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+        run: |
+          $portable = Join-Path (Get-Location) "release/Tokglint.exe"
+          if (-not (Test-Path $portable)) {
+            throw "The portable updater asset release/Tokglint.exe was not produced."
+          }
+          $tag = "${{ github.ref_name }}"
+          $files = @(Get-ChildItem release -File | ForEach-Object { $_.FullName })
+          gh release create $tag @files --title "Tokglint $tag" --notes "Portable app: Tokglint.exe. The NSIS setup and MSI install Tokglint."

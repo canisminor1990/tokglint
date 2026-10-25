@@ -1,0 +1,86 @@
+{
+  "name": "tokglint",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsgo --noEmit && vite build",
+    "build:app": "tauri build && node scripts/collect-release.mjs",
+    "dev": "vite",
+    "dev:app": "tauri dev",
+    "i18n": "lobe-i18n",
+    "lint": "eslint . --concurrency=auto --fix",
+    "lint:md": "remark . --silent --output",
+    "lint:style": "stylelint \"src/**/*.{js,jsx,ts,tsx,css}\" --fix",
+    "prepare": "husky",
+    "prettier": "prettier -c --write \"**/**\"",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "type-check": "tsgo --noEmit"
+  },
+  "lint-staged": {
+    "*.md": [
+      "remark --silent --silently-ignore --output --",
+      "prettier --write --no-error-on-unmatched-pattern"
+    ],
+    "*.json": [
+      "prettier --write --no-error-on-unmatched-pattern"
+    ],
+    "*.{mjs,cjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "stylelint --fix",
+      "prettier --write"
+    ],
+    "*.{ts,tsx}": [
+      "stylelint --fix",
+      "eslint --fix",
+      "prettier --parser=typescript --write"
+    ],
+    "*.css": [
+      "stylelint --fix",
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "@ant-design/cssinjs": "^2.1.2",
+    "@lobehub/fluent-emoji": "^5.0.1",
+    "@lobehub/icons": "^6.11.0",
+    "@lobehub/icons-static-avatar": "^2.5.0",
+    "@lobehub/ui": "^6.9.0",
+    "@tauri-apps/api": "^2.12.4",
+    "@tauri-apps/plugin-opener": "^2.7.2",
+    "antd": "^6.6.7",
+    "i18next": "^26.5.10",
+    "lucide-react": "^1.61.0",
+    "motion": "^14.6.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-i18next": "^17.1.8",
+    "swr": "^2.5.1",
+    "zustand": "^5.0.16"
+  },
+  "devDependencies": {
+    "@lobehub/i18n-cli": "^1.27.0",
+    "@lobehub/lint": "2.1.5",
+    "@tauri-apps/cli": "^2.12.4",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@typescript/native-preview": "7.0.0-dev.20260707.2",
+    "@vitejs/plugin-react": "^6.1.2",
+    "eslint": "10.0.2",
+    "husky": "9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.9.10",
+    "remark": "^15.0.1",
+    "remark-cli": "^12.0.1",
+    "stylelint": "^16.26.1",
+    "typescript": "~6.0.3",
+    "vite": "^8.3.5"
+  },
+  "packageManager": "pnpm@11.21.0"
+}

@@ -1,0 +1,16 @@
+{
+  "en_US": {
+    "code": "en",
+    "nativeName": "English",
+    "localePatterns": ["en"],
+    "order": 0
+  },
+  "zh_CN": {
+    "code": "zh-CN",
+    "nativeName": "简体中文",
+    "localePatterns": ["zh"],
+    "order": 1,
+    "windowsFontName": "microsoft-yahei",
+    "windowsFontFile": "msyh.ttc"
+  }
+}

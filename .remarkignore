@@ -1,0 +1,7 @@
+node_modules
+dist
+dist-ssr
+release
+src-tauri
+pnpm-lock.yaml
+.agents/skills/lobe-design

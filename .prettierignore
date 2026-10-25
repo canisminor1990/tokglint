@@ -1,0 +1,20 @@
+node_modules
+dist
+dist-ssr
+release
+src-tauri
+coverage
+*.lock
+pnpm-lock.yaml
+*.log
+build-log.txt
+.husky
+.*ignore
+*.webp
+*.gif
+*.png
+*.jpg
+*.svg
+
+# Vendored from lobehub/lobe-design-skill; linted upstream
+.agents/skills/lobe-design

@@ -1,0 +1,57 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+build-log.txt
+
+# Dependencies and package-manager cache
+node_modules
+.pnpm-store
+
+# Frontend build output and caches
+dist
+dist-ssr
+.vite
+.cache
+.turbo
+*.tsbuildinfo
+coverage
+.nyc_output
+
+# Local env and machine overrides
+*.local
+.env
+.env.*
+!.env.example
+
+# Lint caches
+.eslintcache
+.stylelintcache
+
+# Rust / Tauri build output
+# src-tauri/.gitignore also ignores /target and /gen/schemas
+target/
+src-tauri/gen/
+
+# Desktop app and installers copied to the repo root by scripts/collect-release.mjs
+/release/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
