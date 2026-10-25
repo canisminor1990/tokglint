@@ -1,6 +1,6 @@
 [package]
 name = "tokglint"
-version = "0.1.0"
+version = "0.2.0"
 description = "Tokglint — tray, taskbar widget, and React settings"
 authors = ["you"]
 edition = "2021"
