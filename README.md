@@ -60,6 +60,8 @@ reaches the widget immediately.
 
 A missing reading stays `--`. A failed read keeps its error.
 
+Tokglint is released under the [MIT license](LICENSE).
+
 The taskbar widget and its embedding are based on
 [Claude Code Usage Monitor][monitor-link] (MIT).
 

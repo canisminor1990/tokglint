@@ -10,6 +10,7 @@
     "type": "git",
     "url": "https://github.com/canisminor1990/tokglint.git"
   },
+  "license": "MIT",
   "author": "canisminor1990 <i@canisminor.cc>",
   "type": "module",
   "scripts": {
