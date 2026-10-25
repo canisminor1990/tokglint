@@ -17,7 +17,7 @@ const DOWNLOAD_EXE_NAME: &str = "update-download.exe";
 const CREATE_NO_WINDOW: u32 = 0x08000000;
 const CREATE_NEW_CONSOLE: u32 = 0x00000010;
 // Keep this aligned with the package identifier used in winget-pkgs.
-const WINGET_PACKAGE_ID: &str = "CodeZeno.Tokglint";
+const WINGET_PACKAGE_ID: &str = "CanisMinor.Tokglint";
 // `winget show` exit code when the package is not in the source.
 const WINGET_NO_APPLICATIONS_FOUND: u32 = 0x8A15_0014;
 const WINGET_SHOW_TIMEOUT: Duration = Duration::from_secs(60);

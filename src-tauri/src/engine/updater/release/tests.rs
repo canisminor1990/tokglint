@@ -85,11 +85,13 @@ fn rejects_oversized_and_empty_assets() {
 
 #[test]
 fn rejects_unexpected_download_locations() {
+    let (owner, repo) = github_repo().unwrap();
+    let asset = RELEASE_ASSET_NAME;
     for url in [
-        "http://github.com/CodeZeno/Claude-Code-Usage-Monitor/releases/download/v2.14.0/Tokglint.exe",
-        "https://example.com/Tokglint.exe",
-        "https://github.com/other/repo/releases/download/v2.14.0/Tokglint.exe",
-        "https://github.com/CodeZeno/Claude-Code-Usage-Monitor/releases/download/v2.13.44/Tokglint.exe",
+        format!("http://github.com/{owner}/{repo}/releases/download/v2.14.0/{asset}"),
+        format!("https://example.com/{asset}"),
+        format!("https://github.com/other/repo/releases/download/v2.14.0/{asset}"),
+        format!("https://github.com/{owner}/{repo}/releases/download/v2.13.44/{asset}"),
     ] {
         let mut value = fixture("v2.14.0");
         value["assets"][0]["browser_download_url"] = json!(url);

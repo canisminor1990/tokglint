@@ -89,7 +89,7 @@ it under **Providers**.
 Install the latest release with WinGet:
 
 ```powershell
-winget install CodeZeno.Tokglint
+winget install CanisMinor.Tokglint
 ```
 
 Or download `Tokglint.exe` from the GitHub release for this repository.
@@ -99,7 +99,7 @@ the `sha256:` digest published with that release. A WinGet install can also
 update with:
 
 ```powershell
-winget upgrade --id CodeZeno.Tokglint --exact
+winget upgrade --id CanisMinor.Tokglint --exact
 ```
 
 After installation, the tray icon and the widget are what you see.
@@ -320,10 +320,12 @@ tokglint/
   locales/             English and Simplified Chinese
 ```
 
-Pushing a `vX.Y.Z` tag runs `.github/workflows/release.yml`.
-The tag must match `version` in `package.json`, `src-tauri/tauri.conf.json`,
-and `src-tauri/Cargo.toml`. The workflow builds on `windows-latest` and
-publishes a stable release. That release needs exactly one `Tokglint.exe`.
+Pushing to `main` runs `.github/workflows/release.yml`.
+semantic-release publishes a stable GitHub release when a gitmoji
+conventional commit requires one, and writes that version into
+`package.json`, `src-tauri/tauri.conf.json`, and `src-tauri/Cargo.toml`.
+The workflow builds on `windows-latest`. That release contains exactly one
+`Tokglint.exe`.
 
 <div align="right">
 
@@ -342,4 +344,4 @@ which is [MIT][monitor-license] licensed.
 [monitor-license]: https://github.com/CodeZeno/Claude-Code-Usage-Monitor/blob/main/LICENSE
 [monitor-link]: https://github.com/CodeZeno/Claude-Code-Usage-Monitor
 [windows-shield]: https://img.shields.io/badge/platform-Windows-0078D4?logo=windows&logoColor=white&labelColor=black&style=flat-square
-[winget-shield]: https://img.shields.io/badge/WinGet-CodeZeno.Tokglint-60A5FA?labelColor=black&style=flat-square
+[winget-shield]: https://img.shields.io/badge/WinGet-CanisMinor.Tokglint-60A5FA?labelColor=black&style=flat-square

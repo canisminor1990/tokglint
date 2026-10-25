@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Tokglint — tray, taskbar widget, and React settings"
 authors = ["you"]
 edition = "2021"
+repository = "https://github.com/canisminor1990/tokglint"
 
 [lib]
 name = "tokglint"

@@ -7,6 +7,7 @@ publicHoistPattern:
   - '*remark*'
   - '*stylelint*'
   - '*commitlint*'
+  - '*semantic-release*'
 
 minimumReleaseAgeExclude:
   - '@lobehub/fluent-emoji@5.0.1'

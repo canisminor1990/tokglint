@@ -1,20 +1,51 @@
-name: Release
+name: Release CI
 
 on:
   push:
-    tags:
-      - "v*.*.*"
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      force_release:
+        description: Force release (bypass conventional commits)
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "true"
+          - "false"
+      release_type:
+        description: Release type (when force release is true)
+        required: false
+        default: patch
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+# The release commits a version bump back to main, so two runs must never overlap.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 permissions:
   contents: write
+  issues: write
+  pull-requests: write
 
 jobs:
-  windows:
-    name: Build and publish Tokglint
+  release:
+    name: Release Tokglint
     runs-on: windows-latest
+    env:
+      HUSKY: 0
     steps:
       - name: Check out the repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref_name }}
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -31,47 +62,30 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Require the tag to match the app version
+      - name: Configure Git
         shell: pwsh
         run: |
-          $tag = "${{ github.ref_name }}"
-          if ($tag -notmatch '^v\d+\.\d+\.\d+$') {
-            throw "Release tags must look like v1.2.3."
-          }
-          $version = $tag.Substring(1)
-          $package = (Get-Content package.json -Raw | ConvertFrom-Json).version
-          $tauri = (Get-Content src-tauri/tauri.conf.json -Raw | ConvertFrom-Json).version
-          $cargo = (Select-String -Path src-tauri/Cargo.toml -Pattern '^version = "([^"]+)"' | Select-Object -First 1).Matches.Groups[1].Value
-          if ($package -ne $version -or $tauri -ne $version -or $cargo -ne $version) {
-            throw "Tag $tag does not match package.json ($package), tauri.conf.json ($tauri), and Cargo.toml ($cargo)."
-          }
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Point portable updates at this repository
+      - name: Anchor the current version when no release tag exists
         shell: pwsh
         run: |
-          $path = Join-Path (Get-Location) "src-tauri/Cargo.toml"
-          $url = "https://github.com/${{ github.repository }}"
-          $text = [System.IO.File]::ReadAllText($path)
-          $line = "repository = `"$url`""
-          if ($text -match '(?m)^repository\s*=') {
-            $text = [regex]::Replace($text, '(?m)^repository\s*=\s*".*"', $line)
-          } else {
-            $text = [regex]::Replace($text, '(?m)^(edition\s*=\s*"2021"\r?\n)', { param($match) $match.Groups[1].Value + $line + "`n" }, 1)
-          }
-          [System.IO.File]::WriteAllText($path, $text)
+          $existing = git tag --list --merged HEAD "v*.*.*"
+          if ($existing) { exit 0 }
+          $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          $count = [int](git rev-list --count HEAD)
+          $target = if ($count -gt 1) { git rev-parse "HEAD~1" } else { git rev-parse HEAD }
+          git tag "v$version" $target
+          git push origin "v$version"
 
-      - name: Build the app and installers
-        run: pnpm build:app
+      - name: Force release commit
+        if: github.event.inputs.force_release == 'true'
+        shell: pwsh
+        run: |
+          git commit --allow-empty -m "🔧 chore(release): force ${{ github.event.inputs.release_type }} release"
 
-      - name: Publish the GitHub release
+      - name: Release
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: pwsh
-        run: |
-          $portable = Join-Path (Get-Location) "release/Tokglint.exe"
-          if (-not (Test-Path $portable)) {
-            throw "The portable updater asset release/Tokglint.exe was not produced."
-          }
-          $tag = "${{ github.ref_name }}"
-          $files = @(Get-ChildItem release -File | ForEach-Object { $_.FullName })
-          gh release create $tag @files --title "Tokglint $tag" --notes "Portable app: Tokglint.exe. The NSIS setup and MSI install Tokglint."
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm release

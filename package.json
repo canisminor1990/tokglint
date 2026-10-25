@@ -2,6 +2,15 @@
   "name": "tokglint",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://github.com/canisminor1990/tokglint",
+  "bugs": {
+    "url": "https://github.com/canisminor1990/tokglint/issues/new"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/canisminor1990/tokglint.git"
+  },
+  "author": "canisminor1990 <i@canisminor.cc>",
   "type": "module",
   "scripts": {
     "build": "tsgo --noEmit && vite build",
@@ -15,6 +24,7 @@
     "prepare": "husky",
     "prettier": "prettier -c --write \"**/**\"",
     "preview": "vite preview",
+    "release": "semantic-release",
     "tauri": "tauri",
     "type-check": "tsgo --noEmit"
   },
@@ -66,18 +76,28 @@
   "devDependencies": {
     "@lobehub/i18n-cli": "^1.27.0",
     "@lobehub/lint": "2.1.5",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.6",
+    "@semantic-release/npm": "^12.0.2",
+    "@semantic-release/release-notes-generator": "^14.1.0",
     "@tauri-apps/cli": "^2.12.4",
     "@types/node": "^22.20.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@typescript/native-preview": "7.0.0-dev.20260707.2",
     "@vitejs/plugin-react": "^6.1.2",
+    "commitlint": "^21.2.3",
+    "conventional-changelog-gitmoji-config": "1.5.2",
     "eslint": "10.0.2",
     "husky": "9.1.7",
     "lint-staged": "^16.4.0",
     "prettier": "^3.9.10",
     "remark": "^15.0.1",
     "remark-cli": "^12.0.1",
+    "semantic-release": "^25.0.9",
     "stylelint": "^16.26.1",
     "typescript": "~6.0.3",
     "vite": "^8.3.5"

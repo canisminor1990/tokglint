@@ -152,7 +152,7 @@ Run that in `src-tauri`. PowerShell rejects `&&`. `cargo test --lib` takes one f
 
 `cargo build` warns about items that only tests call, because it does not compile tests. `#![cfg_attr(not(test), allow(dead_code))]` on `src-tauri/src/lib.rs` is there for that. Do not delete updater helpers or test-only items to clear it.
 
-`cargo build --release` writes `src-tauri/target/release/Tokglint.exe` because `[[bin]] name = "Tokglint"` is set. The Cargo package name is `tokglint`. The identifier is `com.codezeno.tokglint`; changing it makes Windows treat the install as a different app. A release build does not run `pnpm build`; the embedded UI is whatever is already in `dist/`.
+`cargo build --release` writes `src-tauri/target/release/Tokglint.exe` because `[[bin]] name = "Tokglint"` is set. The Cargo package name is `tokglint`. The identifier is `com.canisminor.tokglint`; changing it makes Windows treat the install as a different app. A release build does not run `pnpm build`; the embedded UI is whatever is already in `dist/`.
 
 Settings UI: `pnpm dev`, then open `http://localhost:1420` (not `127.0.0.1`). Turn the provider on. Overview shows one card, avatar and name in the title. Providers shows no usage bar.
 

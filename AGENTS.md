@@ -22,9 +22,9 @@ one-time migration. Do not write that name back into new code.
 - The Cargo package name is `tokglint`. The Rust library crate is `tokglint`.
   The executable name comes from `mainBinaryName` in `tauri.conf.json`
   and from `[[bin]] name = "Tokglint"`.
-- The identifier is `com.codezeno.tokglint`.
+- The identifier is `com.canisminor.tokglint`.
   Changing it makes Windows treat the install as a different app.
-- The WinGet package id is `CodeZeno.Tokglint`.
+- The WinGet package id is `CanisMinor.Tokglint`.
 
 ## Build
 
@@ -42,15 +42,23 @@ Do not commit `release/`, `dist/`, `node_modules/`, or `src-tauri/target/`.
 
 ## Release
 
-Pushing a `vX.Y.Z` tag runs `.github/workflows/release.yml`.
-The tag must equal `version` in `package.json`, `src-tauri/tauri.conf.json`,
-and `src-tauri/Cargo.toml`. The workflow builds only on `windows-latest`,
-publishes a stable release, and writes `repository` into that build's
-`Cargo.toml` so the portable app can find this GitHub repository.
+Pushing to `main` runs `.github/workflows/release.yml`.
+semantic-release reads `.releaserc.mjs` and publishes when a commit since
+the last `vX.Y.Z` tag requires a release. Commits use gitmoji conventional
+form, enforced by commitlint, for example `✨ feat: ...` or `🐛 fix: ...`.
+`feat` releases a minor version. `fix`, `perf`, `style`, `refactor`, and
+`build` release a patch. `docs`, `test`, `ci`, and `chore` stay unpublished.
 
-The release must contain exactly one `Tokglint.exe`. Installers may sit
-beside it. Do not mark the release as a draft or prerelease;
-the updater skips those.
+The workflow builds on `windows-latest`. It writes that version into
+`package.json`, `src-tauri/tauri.conf.json`, and `src-tauri/Cargo.toml`,
+and publishes a stable GitHub release. The updater loads releases from
+`repository` in `src-tauri/Cargo.toml`:
+`https://github.com/canisminor1990/tokglint`. The release contains exactly
+one `Tokglint.exe`. Installers may sit beside it. Publish it as a stable
+release; the updater follows stable releases only.
+
+The first run tags the previous commit with the `package.json` version when
+`main` has no `vX.Y.Z` tag, so later releases continue from that version.
 
 ## Skills
 
@@ -58,7 +66,7 @@ Read the one file that matches the task. Do not read the other skills, and do no
 
 | Task                                                                             | Read                                                                                                      |
 | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Add a provider, poller, or account                                               | `.agents/add-provider/SKILL.md`                                                                           |
+| Add a provider, poller, or account                                               | `.agents/skills/add-provider/SKILL.md`                                                                    |
 | Change the taskbar widget: meters, layout, width, or a click on a provider block | `.agents/skills/edit-widget/SKILL.md`                                                                     |
 | Change a notification-area icon: badge, digits, color, or tray click             | `.agents/skills/edit-tray-icon/SKILL.md`                                                                  |
 | Settings-window pages, layout, or copy                                           | The lobe-design block below. Then read `.agents/skills/lobe-design/SKILL.md` and only the stage it lists. |

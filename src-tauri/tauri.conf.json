@@ -3,7 +3,7 @@
   "productName": "Tokglint",
   "mainBinaryName": "Tokglint",
   "version": "0.1.0",
-  "identifier": "com.codezeno.tokglint",
+  "identifier": "com.canisminor.tokglint",
   "build": {
     "beforeDevCommand": "pnpm dev",
     "devUrl": "http://localhost:1420",
