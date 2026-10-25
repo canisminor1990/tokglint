@@ -6,24 +6,21 @@ import { fileURLToPath } from 'node:url';
 const portableName = 'Tokglint.exe';
 
 export function bumpJsonVersion(text, version) {
-  const next = text.replace(/"version"\s*:\s*"[^"]+"/, `"version": "${version}"`);
-  if (next === text) throw new Error('No version field found.');
-  return next;
+  const pattern = /"version"\s*:\s*"[^"]+"/;
+  if (!pattern.test(text)) throw new Error('No version field found.');
+  return text.replace(pattern, `"version": "${version}"`);
 }
 
 export function bumpCargoVersion(text, version) {
-  const next = text.replace(/^version = "[^"]+"/m, `version = "${version}"`);
-  if (next === text) throw new Error('No Cargo package version found.');
-  return next;
+  const pattern = /^version = "[^"]+"/m;
+  if (!pattern.test(text)) throw new Error('No Cargo package version found.');
+  return text.replace(pattern, `version = "${version}"`);
 }
 
 export function bumpLockVersion(text, version) {
-  const next = text.replace(
-    /(\[\[package\]\]\r?\nname = "tokglint"\r?\nversion = ")[^"]+(")/,
-    `$1${version}$2`,
-  );
-  if (next === text) throw new Error('No tokglint package in Cargo.lock.');
-  return next;
+  const pattern = /(\[\[package\]\]\r?\nname = "tokglint"\r?\nversion = ")[^"]+(")/;
+  if (!pattern.test(text)) throw new Error('No tokglint package in Cargo.lock.');
+  return text.replace(pattern, `$1${version}$2`);
 }
 
 export function injectRepository(text, url) {
@@ -57,7 +54,11 @@ function requireVersion(version) {
 }
 
 function writeVersion(file, version, bump) {
-  writeFileSync(file, bump(readFileSync(file, 'utf8'), version));
+  try {
+    writeFileSync(file, bump(readFileSync(file, 'utf8'), version));
+  } catch (error) {
+    throw new Error(`${file}: ${error.message}`, { cause: error });
+  }
 }
 
 function assertPortableAsset(root) {
